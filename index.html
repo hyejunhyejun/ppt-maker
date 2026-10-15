@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PPT 메이커</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <h1>PPT 메이커 <small>답변을 붙여넣으면 회의용 PPT로</small></h1>
+  <button id="btn-settings" class="ghost">⚙ 설정</button>
+</header>
+
+<main class="layout">
+  <section class="pane input">
+    <label for="src" class="lbl">1. P-GPT 답변 붙여넣기 <span class="hint">(표 구조 그대로 붙여넣기 가능)</span></label>
+    <textarea id="src" placeholder="P-GPT 답변을 복사해서 Ctrl+V 하세요. 마크다운도 됩니다."></textarea>
+    <div class="row samples">예시:
+      <button class="link" data-sample="contract">계약방식 검토</button>
+      <button class="link" data-sample="center">기술제안센터</button>
+    </div>
+
+    <div class="lbl">2. 장수</div>
+    <div class="seg" id="modes">
+      <button data-mode="1">1장</button><button data-mode="3">3장</button><button data-mode="5">5장</button><button data-mode="auto">추천</button>
+    </div>
+
+    <div class="lbl">3. 양식 <span class="hint">(생성 후에도 바로 전환)</span></div>
+    <div class="seg" id="themes">
+      <button data-theme="apple">Apple</button><button data-theme="toss">Toss</button><button data-theme="posco">POSCO</button>
+    </div>
+
+    <button id="btn-gen" class="primary big">PPT 생성</button>
+    <p id="status" class="status" role="status"></p>
+  </section>
+
+  <section class="pane preview">
+    <div class="toolbar" id="toolbar">
+      <div class="grp">
+        <button data-act="undo" title="되돌리기 (Ctrl+Z)">↶ 되돌리기</button>
+      </div>
+      <div class="grp">
+        <span class="gl">슬라이드</span>
+        <button data-act="slide-add">+ 추가</button><button data-act="slide-dup">복제</button>
+        <button data-act="slide-up" title="앞으로">↑</button><button data-act="slide-down" title="뒤로">↓</button>
+        <button data-act="slide-del">삭제</button>
+      </div>
+      <div class="grp">
+        <span class="gl">넣기</span>
+        <button data-act="add-text">글상자</button><button data-act="add-table">표</button>
+        <button data-act="add-process">흐름도</button><button data-act="add-note">※박스</button><button data-act="add-conclusion">결론박스</button>
+      </div>
+      <div class="grp sel-only">
+        <span class="gl">선택</span>
+        <button data-act="bold" title="글자를 드래그해 선택한 뒤"><b>B</b></button>
+        <button data-act="fs-" title="글자 작게">가-</button><button data-act="fs+" title="글자 크게">가+</button>
+        <span id="swatches"></span>
+        <button data-act="del">요소 삭제</button>
+      </div>
+      <div class="grp table-only">
+        <button data-act="row+">행+</button><button data-act="row-">행−</button><button data-act="col+">열+</button><button data-act="col-">열−</button>
+      </div>
+      <div class="grp process-only">
+        <button data-act="step+">단계+</button><button data-act="step-">단계−</button>
+      </div>
+      <button id="btn-done" class="primary">완료 · PPT 다운로드</button>
+    </div>
+    <div id="banner" class="banner" hidden>원문 일부가 장수에 맞춰 요약·생략되었습니다. 전체 내용은 '추천'이나 더 많은 장수를 선택하세요.</div>
+    <div class="work">
+      <ol id="thumbs" class="thumbs"></ol>
+      <div id="stage" class="stage"><p class="empty">왼쪽에 답변을 붙여넣고 <b>PPT 생성</b>을 누르세요.<br>요소 클릭 = 선택·이동, 더블클릭 = 글자 수정, 모서리 ◢ = 크기 조절</p></div>
+    </div>
+  </section>
+</main>
+
+<dialog id="dlg-settings">
+  <form method="dialog">
+    <h2>LLM 설정</h2>
+    <p class="hint">POC는 Google Gemini 무료 키를 씁니다. 키는 이 브라우저에만 저장됩니다.<br>
+      <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">키 발급 (Google AI Studio)</a> ·
+      <b>무료 키에는 사내 실문서를 넣지 마세요</b> (입력이 학습에 쓰일 수 있음).</p>
+    <label>API 키 <input id="in-key" type="password" autocomplete="off" placeholder="AIza..."></label>
+    <label>모델 <input id="in-model" placeholder="gemini-flash-latest"></label>
+    <div class="row end"><button value="cancel" class="ghost">취소</button><button id="btn-save" value="save" class="primary">저장</button></div>
+  </form>
+</dialog>
+
+<div id="toast" class="toast" hidden></div>
+
+<script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
+<script src="js/layout.js"></script>
+<script src="js/themes.js"></script>
+<script src="js/render.js"></script>
+<script src="js/export.js"></script>
+<script src="js/llm.js"></script>
+<script src="js/samples.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
